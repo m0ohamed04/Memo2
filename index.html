@@ -1699,6 +1699,7 @@
         const openWhenMsgs = { sad: "متزعليش يا روح قلبي.. تعالي فحضني وكل حاجه هتبقي تمام   ❤️", happy: "يارب دايماً فرحانة يا أميرتي 👑", miss: "وانتي كمان وحشتيني أوي أوي ي ميمو فوق منتي تتخيلي 🥺", mad: "خلاص بقى فكي التكشيرة دي 😉 بحبك اوي يوه!" };
         const wheelOptions = ["ناكل شاورما 🌯", "نتمشى ع البحر 🌊", "نتفرج على فيلم 🎬", "ناكل آيس كريم 🍦", "نشرب هوت شوكلت ☕"];
         const msg1 = "اي ي ميمو عامله اي حقك عليا من كل حاجه حقك عليا مني ومن كل المشاكل و المدايقات اسفلك نيابتا عن اي حاجه خليكي فاكره اني جمبك انا اه وقعت وقعه هقوم منها وغير كل حاجه واعتبريه حصل انا عاوز اكون احسن عشانك انتي تستاهلي كل خير انا لا هبعد ولا هتغير ولا هزهق وهبقي بصوره احسن من الي شيفاها انا بحبك افتكري بس اني جمبك وهفضل سبورت ليكي وفتخر بيكي ديما ربنا يارب يسعدك ويسعدنا وشوفك بخير ديما";
+        const longLoveMsg = "بعيدا عن الكلام تعرفي انك بتوحشيني اوي اويييي انتي اكتر حاجه بحبها فحياتي ي ميمو انا هفضل جمبك وعمري ما هزهق ولا همل وهتفضلي احلي حاجه حصلتلي فحياتي ربنا يخليكي ليا يارب ومشوفش فيكي وحش ❤️";
 
         let currentSongIndex = 0; let isMusicPlaying = false;
         let jarTimeout, moodTimeout, scanTimer, typingTimeout;
@@ -1717,6 +1718,13 @@
 
         function checkPassword() {
             if (document.getElementById("password").value === "040913") {
+                // --- iOS Hack: Trigger Play but MUTE it immediately ---
+                // This satisfies the browser's user interaction requirement
+                audioPlayer.volume = 0; 
+                if (!audioPlayer.src || audioPlayer.src === window.location.href) audioPlayer.src = playlist[currentSongIndex];
+                audioPlayer.play().catch(e => console.log("iOS Autoplay Prevented:", e));
+                isMusicPlaying = true; // Technically playing, but silent
+
                 // 1. إخفاء شاشة الدخول
                 document.getElementById("login-screen").classList.add("hidden");
                 
@@ -1760,10 +1768,15 @@
                     setTimeout(() => {
                         loadingScreen.style.display = 'none'; // إزالة نهائية
                         
+                        // --- START AUDIO FOR REAL ---
+                        // Restart song from beginning and Unmute
+                        audioPlayer.currentTime = 0;
+                        audioPlayer.volume = 1;
+                        updateSongName();
+                        
                         // تشغيل باقي الوظائف
                         startRain(); 
                         startTimer(); 
-                        playMusic(); // <-- تم التأكد من وجودها هنا عشان تشتغل أوتوماتيك
                         updateGreeting();
                         setTimeout(() => { showNotification("بحبك يا ميمو يا روح قلبي ❤️"); }, 5000);
                         setTimeout(() => { showNotification("وحشتيني اوي ع فكره يا ميمو 🥺"); }, 15000);
@@ -1773,11 +1786,11 @@
                         // --- 25 SECONDS TRIGGER (NEW) ---
                         setTimeout(() => {
                             if(isChatOpen) {
-                                addBotMessage("بعيدا عن الكلام تعرفي انك بتوحشيني اوي اويييي انتي اكتر حاجه بحبها فحياتي ي ميمو انا هفضل جمبك وعمري ما هزهق ولا همل وهتفضلي احلي حاجه حصلتلي فحياتي ربنا يخليكي ليا يارب ومشوفش فيكي وحش ❤️");
+                                addBotMessage(longLoveMsg);
                                 setTimeout(() => addBotMessage("بتحبيني يا ميمو؟ 🤔"), 2000);
                                 setTimeout(() => addBotMessage("بتحبيني اكتر حاجه فالدنيا؟ 😉"), 4000);
                             } else {
-                                triggerStalkingNotification("بعيدا عن الكلام تعرفي انك بتوحشيني اوي انتي اكتر حاجه بحبها فحياتي ي ميمو ❤️");
+                                triggerStalkingNotification(longLoveMsg);
                                 const history = localStorage.getItem('memoChatHistory') || "";
                                 // Add subsequent questions to history as well
                                 setTimeout(() => {
@@ -2247,10 +2260,10 @@
             for (let t of targets) {
                 if (msg.includes(t)) return true;
             }
-            // 2. Fuzzy Check (60% similarity)
+            // 2. Fuzzy Check (80% similarity)
             // Useful for typos or elongations (e.g. "بموووت" vs "بموت")
             for (let t of targets) {
-                if (getSimilarity(msg, t) >= 0.6) return true;
+                if (getSimilarity(msg, t) >= 0.8) return true;
             }
             return false;
         }
