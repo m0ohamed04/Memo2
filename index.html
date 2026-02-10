@@ -1685,6 +1685,9 @@
     </div>
 
     <script>
+        // === الرسالة الطويلة الثابتة لضمان عدم القص ===
+        const specialLongMsg = "بعيدا عن الكلام تعرفي انك بتوحشيني اوي اويييي انتي اكتر حاجه بحبها فحياتي ي ميمو انا هفضل جمبك وعمري ما هزهق ولا همل وهتفضلي احلي حاجه حصلتلي فحياتي ربنا يخليكي ليا يارب ومشوفش فيكي وحش ❤️";
+
         // === قائمة الأغاني - تأكدي أن الملفات موجودة ===
         const playlist = ["song1.mp3", "song2.mp3", "song3.mp3"];
         // === صور البازل - تأكدي أن الملفات موجودة ===
@@ -1773,26 +1776,22 @@
                         // --- 25 SECONDS TRIGGER (NEW) ---
                         setTimeout(() => {
                             if(isChatOpen) {
-                                addBotMessage("بعيدا عن الكلام تعرفي انك بتوحشيني اوي اويييي انتي اكتر حاجه بحبها فحياتي ي ميمو انا هفضل جمبك وعمري ما هزهق ولا همل وهتفضلي احلي حاجه حصلتلي فحياتي ربنا يخليكي ليا يارب ومشوفش فيكي وحش ❤️");
-                                setTimeout(() => addBotMessage("بتحبيني يا ميمو؟ 🤔"), 2000);
-                                setTimeout(() => addBotMessage("بتحبيني اكتر حاجه فالدنيا؟ 😉"), 4000);
+                                addBotMessage(specialLongMsg);
                             } else {
-                                triggerStalkingNotification("بعيدا عن الكلام تعرفي انك بتوحشيني اوي انتي اكتر حاجه بحبها فحياتي ي ميمو ❤️");
-                                const history = localStorage.getItem('memoChatHistory') || "";
-                                // Add subsequent questions to history as well
-                                setTimeout(() => {
-                                    const h2 = localStorage.getItem('memoChatHistory') || "";
-                                    const msg2 = `<div class='chat-msg bot-msg'>بتحبيني يا ميمو؟ 🤔 <span class="msg-time">${getCurrentTime()}</span></div>`;
-                                    localStorage.setItem('memoChatHistory', h2 + msg2);
-                                }, 2000);
-                                setTimeout(() => {
-                                    const h3 = localStorage.getItem('memoChatHistory') || "";
-                                    const msg3 = `<div class='chat-msg bot-msg'>بتحبيني اكتر حاجه فالدنيا؟ 😉 <span class="msg-time">${getCurrentTime()}</span></div>`;
-                                    localStorage.setItem('memoChatHistory', h3 + msg3);
-                                    unreadCount += 2;
-                                    updateBadge();
-                                }, 4000);
+                                triggerStalkingNotification(specialLongMsg);
                             }
+                            
+                            // Follow-up messages (Sequential)
+                            setTimeout(() => {
+                                if(isChatOpen) addBotMessage("بتحبيني يا ميمو؟ 🤔");
+                                else appendToHistory("بتحبيني يا ميمو؟ 🤔");
+                            }, 2000);
+
+                            setTimeout(() => {
+                                if(isChatOpen) addBotMessage("بتحبيني اكتر حاجه فالدنيا؟ 😉");
+                                else appendToHistory("بتحبيني اكتر حاجه فالدنيا؟ 😉");
+                            }, 4000);
+
                         }, 25000);
 
                     }, 600); // 0.6s نفس مدة الـ opacity transition
@@ -1802,6 +1801,15 @@
                 const err = document.getElementById("error"); err.style.display = "block"; 
                 document.getElementById("main-container").classList.add("shake"); setTimeout(() => document.getElementById("main-container").classList.remove("shake"), 500);
             }
+        }
+
+        // Helper to append to history if chat is closed without notification sound duplication if handled elsewhere
+        function appendToHistory(msg) {
+             const history = localStorage.getItem('memoChatHistory') || "";
+             const newMsg = `<div class='chat-msg bot-msg'>${msg} <span class="msg-time">${getCurrentTime()}</span></div>`;
+             localStorage.setItem('memoChatHistory', history + newMsg);
+             unreadCount++;
+             updateBadge();
         }
 
         function updateGreeting() {
@@ -2078,12 +2086,7 @@
 
         function triggerStalkingNotification(msg) {
             showNotification(msg);
-            unreadCount++;
-            updateBadge();
-            const history = localStorage.getItem('memoChatHistory') || "";
-            // Add time here too
-            const newMsg = `<div class='chat-msg bot-msg'>${msg} <span class="msg-time">${getCurrentTime()}</span></div>`;
-            localStorage.setItem('memoChatHistory', history + newMsg);
+            appendToHistory(msg);
         }
 
         // 4. Existing Helper Functions
@@ -2098,9 +2101,15 @@
 
         function checkInitiator() {
             const chatBody = document.getElementById('chat-body');
-            if(chatBody.innerHTML.trim() === "") {
-                const hour = new Date().getHours();
-                let timeMsg = hour < 12 ? "صباح الخير يا ميمو ☀️" : "مسا الجمال يا روحي 🌙";
+            const hour = new Date().getHours();
+            let timeMsg = hour < 12 ? "صباح الخير يا ميمو ☀️" : "مساء الجمال يا روحي 🌙";
+            
+            // تعديل: يبعت الرسالة لو الشات فاضي أو لو آخر رسالة مش هي نفس رسالة التحية بتاعة دلوقتي
+            // عشان تظهر لو فتحت سيشن جديد والكلام القديم موجود بس مش لسه مصبح
+            const lastMsg = chatBody.lastElementChild;
+            const lastText = lastMsg ? lastMsg.innerText : "";
+
+            if(chatBody.innerHTML.trim() === "" || !lastText.includes(timeMsg.split(" ")[0])) {
                 addBotMessage(timeMsg);
             }
         }
@@ -2247,10 +2256,10 @@
             for (let t of targets) {
                 if (msg.includes(t)) return true;
             }
-            // 2. Fuzzy Check (60% similarity)
+            // 2. Fuzzy Check (80% similarity - UPDATED)
             // Useful for typos or elongations (e.g. "بموووت" vs "بموت")
             for (let t of targets) {
-                if (getSimilarity(msg, t) >= 0.6) return true;
+                if (getSimilarity(msg, t) >= 0.8) return true;
             }
             return false;
         }
