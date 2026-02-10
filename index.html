@@ -2111,10 +2111,14 @@
 
         function checkInitiator() {
             const chatBody = document.getElementById('chat-body');
-            if(chatBody.innerHTML.trim() === "") {
-                const hour = new Date().getHours();
-                let timeMsg = hour < 12 ? "صباح الخير يا ميمو ☀️" : "مسا الجمال يا روحي 🌙";
-                addBotMessage(timeMsg);
+            const hour = new Date().getHours();
+            let timeMsg = hour < 12 ? "صباح الخير يا ميمو ☀️" : "مسا الجمال يا روحي 🌙";
+            
+            // Check if the last message (if any) matches the current greeting
+            // If the chat is empty OR the last message isn't the current greeting, send it.
+            const history = chatBody.innerHTML;
+            if (history.trim() === "" || !history.includes(timeMsg)) {
+                 addBotMessage(timeMsg);
             }
         }
 
