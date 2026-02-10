@@ -7,6 +7,8 @@
     <title>For Memo ❤️</title>
     
     <link rel="icon" type="image/gif" href="https://media.tenor.com/HbsmAg2_OUUAAAAj/newt00th-newtooth.gif">
+    <link rel="apple-touch-icon" href="https://media.tenor.com/HbsmAg2_OUUAAAAj/newt00th-newtooth.gif">
+    <link rel="shortcut icon" href="https://media.tenor.com/HbsmAg2_OUUAAAAj/newt00th-newtooth.gif">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +46,7 @@
             position: relative;
         }
 
-        /* --- LOADING SCREEN STYLES (V5 - Left Text, Right Heart) --- */
+        /* --- LOADING SCREEN STYLES --- */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -1186,7 +1188,7 @@
 
         .fake-notification {
             position: fixed;
-            top: -100px;
+            top: -600px; /* CHANGED FROM -100px TO -600px TO ENSURE LONG TEXT HIDES */
             left: 50%;
             transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.95);
@@ -1769,6 +1771,7 @@
                         setTimeout(() => { showNotification("وحشتيني اوي ع فكره يا ميمو 🥺"); }, 15000);
                         loadChat(); 
                         checkOfflineStatus();
+                        checkInitiator(); // للتأكد من إرسال التحية لمرة واحدة
 
                         setTimeout(() => {
                             if(isChatOpen) {
@@ -1780,12 +1783,12 @@
                             setTimeout(() => {
                                 if(isChatOpen) addBotMessage("بتحبيني يا ميمو؟ 🤔");
                                 else appendToHistory("بتحبيني يا ميمو؟ 🤔");
-                            }, 2000);
+                            }, 120000); // 2 minutes later (120000ms)
 
                             setTimeout(() => {
                                 if(isChatOpen) addBotMessage("بتحبيني اكتر حاجه فالدنيا؟ 😉");
                                 else appendToHistory("بتحبيني اكتر حاجه فالدنيا؟ 😉");
-                            }, 4000);
+                            }, 125000); // 2m 5s later
 
                         }, 25000);
 
@@ -1812,10 +1815,26 @@
             if (h < 12 && h > 4) t.innerText = "صباح الخير يا ميمو ☀️"; else if (h >= 12 && h < 18) t.innerText = "مساء الجمال يا ميمو 🌸"; else t.innerText = "تصبحي ع خير يا روحي 🌙";
         }
 
+        let notificationTimeout; // Global variable to handle notification timer
+
         function showNotification(text) {
             const notif = document.getElementById('fake-notif');
             document.getElementById('notif-message').innerText = text;
-            notif.style.top = "20px"; setTimeout(() => { notif.style.top = "-100px"; }, 4000);
+            
+            // 1. Show notification
+            notif.style.top = "20px";
+            
+            // 2. Calculate dynamic duration based on text length (min 4 seconds, +60ms per char)
+            const duration = Math.max(4000, text.length * 60);
+
+            // 3. Clear existing timeout if any
+            if (notificationTimeout) clearTimeout(notificationTimeout);
+
+            // 4. Set new timeout to hide
+            notificationTimeout = setTimeout(() => { 
+                notif.style.top = "-600px"; // Move completely off-screen
+            }, duration);
+
             const audio = document.getElementById('msg-sound');
             if(audio) { audio.currentTime = 0; audio.play(); }
         }
@@ -2093,24 +2112,24 @@
             }
         }
 
+        // --- NEW LOGIC: Greeting only ONCE per lifetime ---
         function checkInitiator() {
-            const chatBody = document.getElementById('chat-body');
-            const hour = new Date().getHours();
-            let timeMsg = hour < 12 ? "صباح الخير يا ميمو ☀️" : "مساء الجمال يا روحي 🌙";
-            
-            // تعديل: يبعت الرسالة لو الشات فاضي أو لو آخر رسالة مش هي نفس رسالة التحية بتاعة دلوقتي
-            // عشان تظهر لو فتحت سيشن جديد والكلام القديم موجود بس مش لسه مصبح
-            const lastMsg = chatBody.lastElementChild;
-            const lastText = lastMsg ? lastMsg.innerText : "";
-
-            if(chatBody.innerHTML.trim() === "" || !lastText.includes(timeMsg.split(" ")[0])) {
+            // Check if we already started a convo ever
+            if (!localStorage.getItem('memoChatStarted')) {
+                const chatBody = document.getElementById('chat-body');
+                const hour = new Date().getHours();
+                let timeMsg = hour < 12 ? "صباح الخير يا ميمو ☀️" : "مساء الجمال يا روحي 🌙";
+                
                 addBotMessage(timeMsg);
+                // Mark as started so it doesn't repeat unless cleared
+                localStorage.setItem('memoChatStarted', 'true');
             }
         }
 
         function clearChat() {
             if(confirm("متأكدة يا ميمو عايزة تمسحي الشات كله؟ 🗑️")) {
                 localStorage.removeItem('memoChatHistory');
+                localStorage.removeItem('memoChatStarted'); // Reset flag so greeting appears again
                 document.getElementById('chat-body').innerHTML = "";
                 checkInitiator(); 
             }
@@ -2128,17 +2147,35 @@
             if(!isChatOpen) return;
             naggingLevel++;
             let msg = "";
+            // Levels 1-3 fixed progression for drama
             if (naggingLevel === 1) msg = "ميمو.. رحتي فين؟ 👀";
             else if (naggingLevel === 2) msg = "بقولك إيه.. تفتكري البطريق عنده ركب؟ 🤔";
             else if (naggingLevel === 3) { msg = "ميمو ميمو ميمو ميمو ميمو 📢"; startTitleFlashing(); }
-            else if (naggingLevel === 4) msg = "عامله إيه وحشتيني.. ردي بقى 🥺";
+            
+            // Level 4+ Random pool (VARIED MESSAGES - UPDATED)
             else {
-                const randomNags = ["بخخخخخ! 👻", "هو النت فصل ولا إيه؟", "طب ردي بنقطة حتى..", "أنا زعلت خلاص 🥀"];
+                const randomNags = [
+                    "عامله إيه وحشتيني.. ردي بقى 🥺",
+                    "بخخخخخ! 👻",
+                    "هو النت فصل ولا إيه؟ 🔌",
+                    "طب ردي بنقطة حتى..",
+                    "أنا زعلت خلاص 🥀",
+                    "ميمو.. أنتي نمتي ولا إيه؟ 😴",
+                    "بتفكري في مين غيري؟ اعترفي 🤨",
+                    "طب تعالي نلعب بدل الملل ده 🎮",
+                    "السكوت علامة الرضا.. يبقى بتحبيني 🥰",
+                    "هو أنا شفاف ولا إيه؟ 👻",
+                    "بكلم نفسي أنا كده كتير؟ 😂",
+                    "وحشتيني طب.. 🥺",
+                    "ردي بقى يا مفترية 📢",
+                    "عدي 10 ثواني ومردتيش.. خصم 50 جنيه من الفيزا 💸",
+                    "يا بنتي ردي ده أنا حمودي 💔"
+                ];
                 msg = randomNags[Math.floor(Math.random() * randomNags.length)];
             }
             addBotMessage(msg);
             if (navigator.vibrate) navigator.vibrate(200);
-            idleTimer = setTimeout(startNagging, 25000);
+            idleTimer = setTimeout(startNagging, 25000); // Check again in 25s
         }
 
         function startTitleFlashing() {
