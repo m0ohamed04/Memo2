@@ -1720,60 +1720,56 @@
 
         function checkPassword() {
             if (document.getElementById("password").value === "040913") {
-                // 1. إخفاء شاشة الدخول
+                // 1. تشغيل الموسيقى فوراً (الحل لمشكلة الايفون)
+                playMusic();
+
+                // 2. إخفاء شاشة الدخول
                 document.getElementById("login-screen").classList.add("hidden");
                 
-                // 2. إظهار شاشة التحميل (Loading Screen) وتفعيل الـ Flex
+                // 3. إظهار شاشة التحميل
                 const loadingScreen = document.getElementById("loading-screen");
                 loadingScreen.style.display = "flex";
                 loadingScreen.style.opacity = "1";
 
-                // 3. تفعيل انيميشن القلب (الملء) - 6 ثواني
+                // 4. تفعيل انيميشن القلب (الملء)
                 const heartFill = document.getElementById("animated-heart-fill");
                 heartFill.style.transition = "clip-path 6s linear";
                 
-                // 3.5 تفعيل انيميشن النص (الملء) - 6 ثواني
+                // 5. تفعيل انيميشن النص (الملء)
                 const textFill = document.getElementById("animated-text-fill");
                 textFill.style.transition = "clip-path 6s linear";
 
-                // setTimeout صغير عشان الترانزيشن يشتغل صح بعد الـ display block
                 setTimeout(() => {
                     heartFill.style.clipPath = "inset(0% 0 0 0)";
                     textFill.style.clipPath = "inset(0 0 0 0)";
                 }, 100);
 
-                // 4. سيناريو تغيير الكلام (1.5 ثانية لكل رسالة = 6 ثواني)
                 const subText = document.getElementById("loading-subtext");
-                // البداية
                 subText.innerText = "جاري التأكد إنك ميمو... 🧐";
                 
                 setTimeout(() => { subText.innerText = "تم التأكد.. أنتي ميمو حبيبتي ✅"; }, 1500);
                 setTimeout(() => { subText.innerText = "هفتح اهو متستعجلنيش 😂🩷"; }, 3000);
                 setTimeout(() => { subText.innerText = "بحببببببك يا كوتي 😍"; }, 4500);
 
-                // 5. بعد 6 ثواني.. إخفاء اللودينج وإظهار القائمة الرئيسية
                 setTimeout(() => {
-                    loadingScreen.style.opacity = '0'; // اختفاء ناعم
+                    loadingScreen.style.opacity = '0';
                     
-                    // إظهار المحتوى الرئيسي بالتزامن مع اختفاء اللودينج
                     document.getElementById("main-menu").classList.remove("hidden");
                     document.getElementById("chat-icon").classList.remove("hidden");
                     resetAnimation('main-menu'); 
                     
                     setTimeout(() => {
-                        loadingScreen.style.display = 'none'; // إزالة نهائية
+                        loadingScreen.style.display = 'none';
                         
-                        // تشغيل باقي الوظائف
                         startRain(); 
                         startTimer(); 
-                        playMusic(); // <-- تم التأكد من وجودها هنا عشان تشتغل أوتوماتيك
+                        // playMusic() اتشال من هنا لأنه اشتغل خلاص فوق
                         updateGreeting();
                         setTimeout(() => { showNotification("بحبك يا ميمو يا روح قلبي ❤️"); }, 5000);
                         setTimeout(() => { showNotification("وحشتيني اوي ع فكره يا ميمو 🥺"); }, 15000);
                         loadChat(); 
                         checkOfflineStatus();
 
-                        // --- 25 SECONDS TRIGGER (NEW) ---
                         setTimeout(() => {
                             if(isChatOpen) {
                                 addBotMessage(specialLongMsg);
@@ -1781,7 +1777,6 @@
                                 triggerStalkingNotification(specialLongMsg);
                             }
                             
-                            // Follow-up messages (Sequential)
                             setTimeout(() => {
                                 if(isChatOpen) addBotMessage("بتحبيني يا ميمو؟ 🤔");
                                 else appendToHistory("بتحبيني يا ميمو؟ 🤔");
@@ -1794,7 +1789,7 @@
 
                         }, 25000);
 
-                    }, 600); // 0.6s نفس مدة الـ opacity transition
+                    }, 600);
                 }, 6000);
 
             } else {
@@ -1821,7 +1816,6 @@
             const notif = document.getElementById('fake-notif');
             document.getElementById('notif-message').innerText = text;
             notif.style.top = "20px"; setTimeout(() => { notif.style.top = "-100px"; }, 4000);
-            // Play notification sound
             const audio = document.getElementById('msg-sound');
             if(audio) { audio.currentTime = 0; audio.play(); }
         }
