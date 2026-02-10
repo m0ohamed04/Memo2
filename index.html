@@ -44,10 +44,128 @@
             position: relative;
         }
 
+        /* --- LOADING SCREEN STYLES (V5 - Left Text, Right Heart) --- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 300% 300%;
+            animation: gradientBG 15s ease infinite;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease-out;
+        }
+
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
+        }
+
+        .loader-content-wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: row; 
+            gap: 15px; 
+            margin-bottom: 30px;
+            animation: bounceIn 1s infinite alternate cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            direction: ltr; 
+        }
+
+        @keyframes bounceIn {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .loading-text-container {
+            position: relative;
+            display: block;
+        }
+
+        .loading-title-base {
+            font-size: 40px;
+            font-weight: 900;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.4); 
+            font-family: sans-serif;
+            letter-spacing: 1px;
+            user-select: none;
+        }
+
+        .loading-title-fill {
+            font-size: 40px;
+            font-weight: 900;
+            font-style: italic;
+            color: #fff; 
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            font-family: sans-serif;
+            letter-spacing: 1px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            clip-path: inset(0 100% 0 0); 
+            user-select: none;
+        }
+
+        .heart-loader-container {
+            width: 60px; 
+            height: 50px;
+            position: relative;
+        }
+
+        .heart-outline {
+            width: 100%;
+            height: 100%;
+            -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center / contain;
+            mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center / contain;
+            background: rgba(255, 255, 255, 0.6);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .heart-fill {
+            width: 100%;
+            height: 100%;
+            -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center / contain;
+            mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center / contain;
+            background: #e91e63;
+            position: absolute;
+            top: 0;
+            left: 0;
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .loading-text-box {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 15px 30px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 85%;
+            margin-top: 10px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        #loading-subtext {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+            min-height: 35px;
+            color: #880e4f;
         }
 
         .heart-rain {
@@ -65,7 +183,6 @@
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* --- الكارت الأساسي --- */
         .container {
             width: 90%;
             max-width: 400px;
@@ -964,7 +1081,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        /* --- TIMESTAMP STYLE (NEW) --- */
+        /* --- TIMESTAMP STYLE --- */
         .msg-time {
             display: block;
             font-size: 10px;
@@ -1209,6 +1326,22 @@
     </style>
 </head>
 <body>
+
+    <div id="loading-screen">
+        <div class="loader-content-wrapper">
+            <div class="loading-text-container">
+                <div class="loading-title-base">Loading.....</div>
+                <div class="loading-title-fill" id="animated-text-fill">Loading.....</div>
+            </div>
+            <div class="heart-loader-container">
+                <div class="heart-outline"></div>
+                <div class="heart-fill" id="animated-heart-fill"></div>
+            </div>
+        </div>
+        <div class="loading-text-box">
+            <div id="loading-subtext">جاري التأكد إنك ميمو... 🧐</div>
+        </div>
+    </div>
 
     <audio id="bg-music" preload="auto"><source src="" type="audio/mpeg"></audio>
     <audio id="voice-note" preload="auto"><source src="voice.mp3" type="audio/mpeg"></audio>
@@ -1469,7 +1602,7 @@
 بت اوعي يشغلك حاجه حمودك موجود وهيتصرف ويحللك كل حاجه
 ان شاء الله نكون فبيتنا فوقت قريب ي حبيبتي
 بحبك اويييي يا ميمو يا حبيبتي
-حمودك🏡🫂🩷         .</div>
+حمودك🏡🫂🩷        .</div>
             <button class="back-btn" onclick="showSection('main-menu')">رجوع</button>
         </div>
 
@@ -1480,9 +1613,9 @@
         </div>
 
         <div id="flower-section" class="hidden">
-            <h2>  احلي ورد يروحي 🌸</h2>
+            <h2>   احلي ورد يروحي 🌸</h2>
             <img src="https://clipart-library.com/image_gallery/n1253055.gif" class="flower-img" alt="Flowers">
-            <div class="info-box">     الورد للورد برضو 💕</div>
+            <div class="info-box">      الورد للورد برضو 💕</div>
             <button class="back-btn" onclick="showSection('main-menu')">رجوع</button>
         </div>
 
@@ -1584,15 +1717,87 @@
 
         function checkPassword() {
             if (document.getElementById("password").value === "040913") {
-                document.getElementById("login-screen").classList.add("hidden"); 
-                document.getElementById("main-menu").classList.remove("hidden");
-                document.getElementById("chat-icon").classList.remove("hidden");
-                resetAnimation('main-menu'); startRain(); startTimer(); playMusic();
-                updateGreeting();
-                setTimeout(() => { showNotification("بحبك يا ميمو يا روح قلبي ❤️"); }, 5000);
-                setTimeout(() => { showNotification("وحشتيني اوي ع فكره يا ميمو 🥺"); }, 15000);
-                loadChat(); // Load chat and check for offline messages
-                checkOfflineStatus(); // New Offline Logic
+                // 1. إخفاء شاشة الدخول
+                document.getElementById("login-screen").classList.add("hidden");
+                
+                // 2. إظهار شاشة التحميل (Loading Screen) وتفعيل الـ Flex
+                const loadingScreen = document.getElementById("loading-screen");
+                loadingScreen.style.display = "flex";
+                loadingScreen.style.opacity = "1";
+
+                // 3. تفعيل انيميشن القلب (الملء) - 6 ثواني
+                const heartFill = document.getElementById("animated-heart-fill");
+                heartFill.style.transition = "clip-path 6s linear";
+                
+                // 3.5 تفعيل انيميشن النص (الملء) - 6 ثواني
+                const textFill = document.getElementById("animated-text-fill");
+                textFill.style.transition = "clip-path 6s linear";
+
+                // setTimeout صغير عشان الترانزيشن يشتغل صح بعد الـ display block
+                setTimeout(() => {
+                    heartFill.style.clipPath = "inset(0% 0 0 0)";
+                    textFill.style.clipPath = "inset(0 0 0 0)";
+                }, 100);
+
+                // 4. سيناريو تغيير الكلام (1.5 ثانية لكل رسالة = 6 ثواني)
+                const subText = document.getElementById("loading-subtext");
+                // البداية
+                subText.innerText = "جاري التأكد إنك ميمو... 🧐";
+                
+                setTimeout(() => { subText.innerText = "تم التأكد.. أنتي ميمو حبيبتي ✅"; }, 1500);
+                setTimeout(() => { subText.innerText = "هفتح اهو متستعجلنيش 😂🩷"; }, 3000);
+                setTimeout(() => { subText.innerText = "بحببببببك يا كوتي 😍"; }, 4500);
+
+                // 5. بعد 6 ثواني.. إخفاء اللودينج وإظهار القائمة الرئيسية
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0'; // اختفاء ناعم
+                    
+                    // إظهار المحتوى الرئيسي بالتزامن مع اختفاء اللودينج
+                    document.getElementById("main-menu").classList.remove("hidden");
+                    document.getElementById("chat-icon").classList.remove("hidden");
+                    resetAnimation('main-menu'); 
+                    
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none'; // إزالة نهائية
+                        
+                        // تشغيل باقي الوظائف
+                        startRain(); 
+                        startTimer(); 
+                        playMusic();
+                        updateGreeting();
+                        setTimeout(() => { showNotification("بحبك يا ميمو يا روح قلبي ❤️"); }, 5000);
+                        setTimeout(() => { showNotification("وحشتيني اوي ع فكره يا ميمو 🥺"); }, 15000);
+                        loadChat(); 
+                        checkOfflineStatus();
+
+                        // --- 25 SECONDS TRIGGER (NEW) ---
+                        setTimeout(() => {
+                            if(isChatOpen) {
+                                addBotMessage("بعيدا عن الكلام تعرفي انك بتوحشيني اوي انتي اكتر حاجه بحبها فحياتي ي ميمو انا هفضل جمبك وعمري ما هزهق ولا همل وهتفضلي احلي حاجه حصلتلي فحياتي ربنا يخليكي ليا يارب ومشوفش فيكي وحش ❤️");
+                                setTimeout(() => addBotMessage("بتحبيني يا ميمو؟ 🤔"), 2000);
+                                setTimeout(() => addBotMessage("بتحبيني اكتر حاجه فالدنيا؟ 😉"), 4000);
+                            } else {
+                                triggerStalkingNotification("بعيدا عن الكلام تعرفي انك بتوحشيني اوي انتي اكتر حاجه بحبها فحياتي ي ميمو ❤️");
+                                const history = localStorage.getItem('memoChatHistory') || "";
+                                // Add subsequent questions to history as well
+                                setTimeout(() => {
+                                    const h2 = localStorage.getItem('memoChatHistory') || "";
+                                    const msg2 = `<div class='chat-msg bot-msg'>بتحبيني يا ميمو؟ 🤔 <span class="msg-time">${getCurrentTime()}</span></div>`;
+                                    localStorage.setItem('memoChatHistory', h2 + msg2);
+                                }, 2000);
+                                setTimeout(() => {
+                                    const h3 = localStorage.getItem('memoChatHistory') || "";
+                                    const msg3 = `<div class='chat-msg bot-msg'>بتحبيني اكتر حاجه فالدنيا؟ 😉 <span class="msg-time">${getCurrentTime()}</span></div>`;
+                                    localStorage.setItem('memoChatHistory', h3 + msg3);
+                                    unreadCount += 2;
+                                    updateBadge();
+                                }, 4000);
+                            }
+                        }, 25000);
+
+                    }, 600); // 0.6s نفس مدة الـ opacity transition
+                }, 6000);
+
             } else {
                 const err = document.getElementById("error"); err.style.display = "block"; 
                 document.getElementById("main-container").classList.add("shake"); setTimeout(() => document.getElementById("main-container").classList.remove("shake"), 500);
@@ -1724,7 +1929,7 @@
         function rpsPlay(choice) { const choices = ['rock', 'paper', 'scissors']; const compChoice = choices[Math.floor(Math.random() * 3)]; let result = ""; let msg = ""; if (choice === compChoice) { result = "تعادل! 😐"; } else if ((choice === 'rock' && compChoice === 'scissors') || (choice === 'paper' && compChoice === 'rock') || (choice === 'scissors' && compChoice === 'paper')) { userRpsScore++; result = "كسبتي! 🎉"; msg = "شاطره يا روحي"; } else { compRpsScore++; result = "خسرتي! 😢"; msg = "معلش ي ميمو هتكسبي المره الجايه انتي شاطره ي حبيبتي ركزي"; } document.getElementById('user-rps-score').innerText = userRpsScore; document.getElementById('comp-rps-score').innerText = compRpsScore; document.getElementById('rps-result').innerHTML = `${result}<br><span style="font-size:14px;color:#555;">${msg}</span>`; }
 
         let flappyScore = 0, flappyHighScore = localStorage.getItem('memoFlappyHigh') || 0; let birdY, birdV, pipes, gameLoop, isFlappyPlaying = false; const canvas = document.getElementById('flappy-canvas'); const ctx = canvas.getContext('2d'); document.getElementById('flappy-high').innerText = flappyHighScore;
-        function startFlappy() { if(isFlappyPlaying) return; isFlappyPlaying = true; birdY = 150; birdV = 0; pipes = []; flappyScore = 0; document.getElementById('flappy-score').innerText = 0; document.getElementById('flappy-start-hint').style.display = "none"; document.getElementById('flappy-start-btn').style.display = "none"; document.getElementById('flappy-end-msg').style.display = "none"; gameLoop = setInterval(updateFlappy, 20); canvas.addEventListener('touchstart', function(e){ e.preventDefault(); birdV = -6; }, {passive: false}); canvas.onclick = () => birdV = -6; }
+        function startFlappy() { if(isFlappyPlaying) return; isFlappyPlaying = true; birdY = 150; birdV = 0; pipes = []; flappyScore = 0; document.getElementById('flappy-score').innerText = 0; document.getElementById('flappy-start-hint').style.display = "none"; document.getElementById('flappy-start-btn').style.display = "none"; document.getElementById('flappy-start-btn').innerText = "ابدأ"; document.getElementById('flappy-end-msg').style.display = "none"; gameLoop = setInterval(updateFlappy, 20); canvas.addEventListener('touchstart', function(e){ e.preventDefault(); birdV = -6; }, {passive: false}); canvas.onclick = () => birdV = -6; }
         function updateFlappy() { ctx.clearRect(0,0,280,350); birdV += 0.4; birdY += birdV; ctx.font = "24px Arial"; ctx.fillText("❤️", 50, birdY); if(pipes.length === 0 || pipes[pipes.length-1].x < 150) { let gap = 110; let top = Math.random() * (350 - gap - 50) + 20; pipes.push({x: 300, top: top, bottom: top + gap}); } for(let i=0; i<pipes.length; i++) { let p = pipes[i]; p.x -= 2; ctx.fillStyle = "#4CAF50"; ctx.fillRect(p.x, 0, 40, p.top); ctx.fillRect(p.x, p.bottom, 40, 350 - p.bottom); if(50+20 > p.x && 50 < p.x+40 && (birdY < p.top || birdY > p.bottom)) gameOverFlappy(); if(p.x === 50) { flappyScore++; document.getElementById('flappy-score').innerText = flappyScore; } } if(birdY > 350 || birdY < 0) gameOverFlappy(); }
         function gameOverFlappy() { clearInterval(gameLoop); isFlappyPlaying = false; let msg = ""; let title = ""; if(flappyScore > flappyHighScore) { flappyHighScore = flappyScore; localStorage.setItem('memoFlappyHigh', flappyHighScore); document.getElementById('flappy-high').innerText = flappyHighScore; title = "🎉 سكور جديد! 🎉"; msg = `السكور: ${flappyScore}<br>شاطره ي ميمو ي حبيبتي`; } else { title = "خسرتي 🥺"; msg = `السكور: ${flappyScore}<br>قربتي تعدي الاسكور يا حبيبتي حاولي تاني 💪`; } const msgBox = document.getElementById('flappy-end-msg'); msgBox.innerHTML = `<h3 style="margin:0 0 10px 0; color:var(--primary-color);">${title}</h3>${msg}`; msgBox.style.display = "block"; document.getElementById('flappy-start-btn').style.display = "block"; document.getElementById('flappy-start-btn').innerText = "العبي تاني"; }
 
@@ -1984,11 +2189,90 @@
             localStorage.setItem('memoChatHistory', chatBody.innerHTML);
         }
 
+        // --- NEW SMART BOT LOGIC ---
+        
+        let conversationContext = ""; // Memory Variable
+
+        // Intents & Keywords Arrays
+        const intents = {
+            sad: ["زعلانة", "مخنوقة", "مضايقة", "عيط", "تعبانة", "حزينة", "كئيبة", "زهقت", "قرفانة"],
+            love: ["قلبي", "روحي", "عمري", "حياتي", "عشقي", "بموت فيك", "يا حبيبي", "بحبك"],
+            miss: ["وحشتني", "فينك", "غايب", "مشتاقة", "انت فين"],
+            bored: ["زهقانة", "ملل", "بضان", "مبضونة", "طقهقانه"],
+            food: ["اكل", "جعانة", "همهم", "بيتزا", "شاورما", "كريب", "برجر"],
+            going_out: ["نخرج", "نتمشى", "خروجة", "فسحة", "البحر", "السينما"],
+            greeting: ["هاي", "هلو", "صباح", "مساء", "ازيك", "اخبارك"]
+        };
+
+        function cleanText(text) {
+            // Removes repeated characters (e.g., جعاااانة -> جعاانة) roughly
+            return text.replace(/(.)\1{2,}/g, '$1$1');
+        }
+
+        function analyzeSmartResponse(originalMsg) {
+            let msg = cleanText(originalMsg);
+
+            // 1. Check Context (Memory)
+            if (conversationContext === 'waiting_for_food') {
+                conversationContext = "";
+                return "خلاص يا ستي نطلب دليفري حالاً.. تحبي ناكل إيه؟ 🍔🍕";
+            }
+            if (conversationContext === 'waiting_for_sad_reason') {
+                conversationContext = "";
+                return "يا خبر! مين اللي يزعل القمر ده؟ قوليلي اسمه بس وأنا أروقه 🥊.. ولا أقولك؟ تعالي أحكيلك حدوتة تفكك؟";
+            }
+
+            // 2. Check Intents
+            for (let word of intents.sad) {
+                if (msg.includes(word)) {
+                    conversationContext = "waiting_for_sad_reason";
+                    return "سلامتك من الزعل يا روح قلبي.. مالك؟ حد زعلك ولا المود مش تمام؟ 😔";
+                }
+            }
+
+            for (let word of intents.love) {
+                if (msg.includes(word)) return "يا لهوي على الكلام الحلو! 😍.. وأنا كمان بموت فيكي يا ميمو يا عسل انتي ❤️";
+            }
+
+            for (let word of intents.miss) {
+                if (msg.includes(word)) return "وأنا كمان وحشتيني موت والله.. ما تيجي في حضني شوية؟ 🫂";
+            }
+
+            for (let word of intents.bored) {
+                if (msg.includes(word)) return "زهقانة؟ طب تعالي نلعب لعبة من اللي في الموقع.. ولا نخرج؟ 😉";
+            }
+
+            for (let word of intents.food) {
+                if (msg.includes(word)) {
+                    conversationContext = "waiting_for_food";
+                    return "أنا كمان واقع من الجوع! تفتكري نضرب إيه النهاردة؟ 🍗";
+                }
+            }
+
+            for (let word of intents.going_out) {
+                if (msg.includes(word)) return "يالا بينا! شوفي تحبي نروح فين وأنا معاكي في أي حتة 🚗💨";
+            }
+
+            for (let word of intents.greeting) {
+                if (msg.includes(word)) return "يا أهلا بيكي يا ست البنات.. منورة الدنيا كلها ✨";
+            }
+
+            // 3. Fallback (General engaging replies)
+            const randomSmartReplies = [
+                "اممم.. قوليلي كمان، بحب أسمعك ❤️",
+                "يا سلام! وأنا أقول الدنيا منورة ليه 😉",
+                "المهم، طمنيني عليكي عاملة إيه دلوقتي؟",
+                "وحشتيني على فكرة.. كنتي بتعملي إيه؟",
+                "أيوه كده احكيلي كمان.. سامعك يا روحي 🥰"
+            ];
+            return randomSmartReplies[Math.floor(Math.random() * randomSmartReplies.length)];
+        }
+
         function getBotResponse(msg) {
             msg = msg.toLowerCase();
             let reply = "";
             
-            // --- Specific Reply for "Mohamed" ---
+            // --- Priority 1: User's Hardcoded Rules (LEGACY - DO NOT TOUCH) ---
             if (msg.includes("محمد")) { 
                 reply = "عيون محمد قلب محمد اي يا روحي ❤️"; 
             } 
@@ -1998,29 +2282,41 @@
             else if (msg.includes("زعلانة") || msg.includes("مخنوقة") || msg.includes("متضايقة") || msg.includes("زهقانه")) { reply = "في اي بس يروحي في تعالي فحضني بس ونتكلم سوا وانا جمبك والله ياروحي حقك عليا انا من كل حاجه انا جمبك ي حبيبتي بحبك اوي ي حبيبتي تعالي رني عليا نتكلم"; } 
             else if (msg.includes("مبضونه")) { reply = "تعالي نلعب اقولك البسي وهجيلك وحشتيني اصلا"; } 
             else if (msg.includes("جعانة") || msg.includes("عايزة آكل")) { reply = "البسي ويلا ننزل ناكل .. العزومة عليا!"; } 
-            else if (msg.includes("بتعمل إيه") || msg.includes("بتعمل ايه") || msg.includes("فينك")) { reply = "بفكر فيكي.. هو أنا ورايا غيرك؟ 😉"; } 
+            else if (msg.includes("بتعمل اي") || msg.includes("بتعمل اي")) { reply = "بفكر فيكي يا حبيبتي ❤️"; }
+            else if (msg.includes("فينك")) { reply = "بفكر فيكي.. هو أنا ورايا غيرك؟ 😉"; } 
             else if (msg.includes("وحشتني")) { reply = "وانتي كمان وحشتيني أوي فوق منتي متخيله يا ميمو والله.. تعالي في حضني بقى 🫂"; } 
             else if (msg.includes("انت عبيط") || msg.includes("يا غبي") || msg.includes("غبي")) { reply = "مقبولة منك يا ملكه.. بحبك برضه 😂"; } 
-            else if (msg.includes("حمودي")) { reply = "عيون حمودي قلب حودي"; } 
+            else if (msg.includes("حمودي")) { reply = "عيون حمودي قلب حمودي"; } 
             else if (msg.includes("عامل اي") || msg.includes("عامل إيه")) { reply = "يعني بصراحه هبقي تمام ازاي من غيرك تعالي ننزل وحشتيني"; } 
             else if (msg.includes("فويس") || msg.includes("صوتك")) { reply = "رني عليا يعني ي ذكيه صوتك وحشني 😉📞"; } 
             else if (msg.includes("والله")) { reply = "والله بحبك ❤️"; } 
             else if (msg.includes("زنان")) { reply = "زنان اه بس بحبك برضو 😂"; } 
             else if (msg.includes("تعالي ننزل") || msg.includes("نخرج")) { reply = "رني عليا طب نظبطها 😉"; } 
             else if (msg.includes("انت مالك") || msg.includes("مالك بيا")) { reply = "انتي مالي ودنيتي وحياتي ي ميمو ❤️"; } 
-            else if (msg.includes("انت عسل") || msg.includes("عسل اوي")) { reply = "والله انتي الي عسل وسكر محلي 🍯"; } 
+            else if (msg.includes("انت عسل") || msg.includes("عسل اوي")) { reply = "والله انتي الي عسل وسكر محلي 🍯"; }
+            
+            // --- NEW RULES ADDED HERE ---
+            else if (msg.includes("انام") || msg.includes("هنام") || msg.includes("عاوزه انام")) {
+                addBotMessage("شديتك فحضني ي حبيبتي وبوست راسك 🫂💋");
+                setTimeout(() => addBotMessage("تصبحي علي خير يا حبيبتي 😴❤️"), 1000);
+                setTimeout(() => addBotMessage("سلام يا حبيبتي هتوحشيني 👋"), 2500);
+                return; 
+            }
+            else if (msg.includes("تصبح علي خير")) { reply = "وانتي من اهلي يا حبيبتي ❤️"; }
+            else if (msg.includes("سلام")) { reply = "سلام يا حبيبتي 👋"; }
+            else if (msg.includes("شويه وجيه")) { reply = "متغبيش عليا بتوحشيني ها 😉"; }
+            else if (msg.includes("انت فين") || msg.includes("كنت فين")) { reply = "قاعد فحضنك 🫂"; }
+            else if (msg.includes("تعالي فحضني")) { reply = "جيييت 🏃‍♂️💨"; }
+            else if (msg.includes("تعبانه")) { reply = "سلامتك ي حبيبتي يارتني كنت انا ولا اشوف فيكي حاجه وحشه طب اي انا جمبك يا حبيبتي 🥺💊"; }
+            else if (msg.includes("اي لاف يو")) { reply = "لاف يوووو توووووووو يا حبيبت قلبي انتي ❤️❤️❤️"; }
+            else if (msg.includes("ميلاد") || msg.includes("عيد ميلاد")) { reply = "عيد ميلادك يا ميمو 19/9/2006 🎂🎉"; }
+            else if (msg.includes("اتعرفنا")) { reply = "يوم ما اتعرفنا كان 13/11/2024، أحلى يوم في حياتي 🥰"; }
+            else if (msg.includes("اول ديت") || msg.includes("اول مره نزلنا") || (msg.includes("نزلنا") && msg.includes("امتى"))) { reply = "أول ديت كان يوم 4/12/2024 يا روحي 📅"; }
+            else if (msg.includes("كنا فين")) { reply = "السينما ي حبيبتي بنشوف موانا واتصورنا اكتر صوره بنحبها فالاسانسير انا بحبك اوي يا ميمو 🍿🎬"; }
+            
             else { 
-                const randomReplies = [
-                    "يا شيخة؟ احلفي! 😂", 
-                    "يا خواتي على العسل.. كملي سامعك 🥰", 
-                    "قلب حمودي والله ❤️", 
-                    "ابعتيلي فويس نوت أحسن عايز أسمع صوتك 🎤", 
-                    "اكلتي ولا لسه يا ميمو؟", 
-                    "طب مترني عليا وننزل ناكل سوا؟ 🍔", 
-                    "وحشتيني.. قوليلي بتعملي ايه؟", 
-                    "ايوه كده احكيلي كمان 😍"
-                ]; 
-                reply = randomReplies[Math.floor(Math.random() * randomReplies.length)]; 
+                // --- Priority 2: Smart Brain (Fallback) ---
+                reply = analyzeSmartResponse(msg);
             }
             addBotMessage(reply);
         }
